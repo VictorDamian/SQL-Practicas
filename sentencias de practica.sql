@@ -1,5 +1,5 @@
 --------------------------- CONSULTAS SELECT
-SELECT NAME 
+SELECT NAME
 FROM Usuarios
 GO
 --------------------------- QUITA DUPLICADOS
@@ -37,6 +37,13 @@ INSERT INTO Usuarios VALUES
 ('miguel','hernandez','2389598'),
 ('manuel','lopez','87238773')
 go
+--
+insert into maestro values(2
+,'pepe',18
+)
+insert into maestro values(4
+,'jose',23
+)
 --------------------------- UPDATE
 UPDATE Usuarios
 SET LASTNAME ='MERCADO'
@@ -118,6 +125,85 @@ FROM ESTUDIANTES AS E
 right JOIN maestro AS M
 ON E.id_m = M.id_m 
 GO
+---------------------------- FULL JOIN
+---------------------------- Devuelve LAS FILAS DE LA PRIMERA tabla
+---------------------------- Devuelve la fila aunque no cumpla la condicion
+SELECT E.nombre, E.id_m, M.nombre_m
+FROM ESTUDIANTES AS E
+FULL JOIN maestro AS M
+ON E.id_m = M.id_m 
+GO
+---------------------------- UNION
+---------------------------- acumular los resultados de dos sentencias SELECT.
+---------------------------- deben tener el mismo num de colum
+SELECT nombre, apellido 
+FROM ESTUDIANTES 
+UNION
+SELECT NAME, LASTNAME 
+FROM Usuarios
+---------------------------- INDEX
+create index nomEstud
+on Estudiantes(nombre)
+go
+--
+DROP INDEX nomEstud 
+ON Estudiantes
+---------------------------- DROP
+---------------------------- Borra un índice, tabla o base de datos.
+DROP TABLE TIENDA
+GO
+---------------------------- TRUNCATE
+---------------------------- ELIMINA DATOS DE UNA TABLA PERO SIN BORRAR LA TABLA
+TRUNCATE TABLE TIENDA
+GO
+---------------------------- ALTER
+---------------------------- AGREGA UNA COLUMNA A LA TABLA
+ALTER TABLE Usuarios
+ADD PASSWORD NVARCHAR(50)
+GO
+--
+alter table maestro
+add edad int
+go
+--
+alter table estudiantes
+add fecha date
+go
+--
+alter table estudiantes
+add id_m int null
+go
+---------------------------- ELIMINA UNA COLUMNA
+ALTER TABLE Usuarios
+DROP COLUMN PASSWORD;
+GO
+--
+alter table estudiantes
+drop constraint fk_idmaestro
+go
+---------------------------- MODIFICA TIPO DE COLUMNA
+ALTER TABLE USUARIOS
+ALTER COLUMN PASSWORD INT
+GO
+---------------------------- VIEW
+CREATE VIEW [Personas con nombre Angel] AS
+SELECT nombre, apellido
+FROM ESTUDIANTES
+WHERE nombre='angel'
+GO
+--
+select*from [Personas con nombre Angel]
+GO
+---------------------------- NULL
+SELECT*FROM maestro 
+WHERE edad IS NOT NULL
+GO
+SELECT*FROM maestro 
+WHERE edad IS NULL
+GO
+--
+---------------------------- GROUP BY
+---------------------------- ORDER BY
 -- AGRUPA CON EL MISMO NOMBRE
 SELECT NAME, LASTNAME
 FROM Usuarios 
@@ -130,80 +216,40 @@ SELECT COUNT(ID), NAME
 FROM Usuarios 
 GROUP BY NAME
 GO
-
 -- ENUMERA NOMBRE IGUALES Y ORDENA
 SELECT COUNT(ID), NAME
 FROM Usuarios
 GROUP BY NAME
 ORDER BY COUNT(ID) DESC
 GO
--------------------------------------------------- CONSULTAS SELECT
--- AGREGA UNA COLUMNA A LA TABLA
-ALTER TABLE Usuarios
-ADD PASSWORD NVARCHAR(50)
-GO
--- ELIMINA UNA COLUMNA
-ALTER TABLE Usuarios
-DROP COLUMN PASSWORD;
-GO
--- MODIFICA TIPO DE COLUMNA
-ALTER TABLE USUARIOS
-ALTER COLUMN PASSWORD INT
-GO
--- ELIMINA DATOS DE UNA TABLA PERO SIN BORRAR LA TABLA
-TRUNCATE TABLE TIENDA
-GO
--- BORRA TABLA
-DROP TABLE TIENDA
-GO
--- ESTUDIANTES--
-alter table estudiantes
-add id_m int null
-go
-
+------------------------------- PRIMARY KEY
 alter table estudiantes
 add constraint pk_estudiante
 primary key (id_e)
 go
----- Primary key
+--
 alter table maestro
 add constraint pk_maestro
 primary key(id_m)
 go
----- Foreign key
+-------------------------------- Foreign key
 alter table estudiantes
 add constraint fk_idmaestro
 foreign key (id_m)
 references maestro(id_m)
 go
-
-alter table estudiantes
-add fecha date
-go
----- Default
+-------------------------------- Default
 alter table estudiantes
 add constraint d_est
 default getdate() for fecha
 go
---- Borrar restricciones
-alter table estudiantes
-drop constraint fk_idmaestro
-go
---- CHECK
-alter table maestro
-add edad int
-go
+-------------------------------- CHECK
 --el criterio puede incluir cualquier expresión con operadores:
 alter table maestro with nocheck
 add constraint ck_maestro
 check (edad>=23)
 go
-insert into maestro values(2
-,'pepe',18
-)
-insert into maestro values(4
-,'jose',23
-)
+--------------------------------
 --- muestra un reporte de las restricciones existentes en una tabla
 Exec sp_helpconstraint estudiantes
 --- muestra información de una restricción en particular

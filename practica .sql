@@ -19,8 +19,6 @@ NOMBRE NVARCHAR (50),
 )
 GO
 
-
-
 INSERT INTO TIENDA VALUES ('DOÑA MIKA')
 INSERT INTO TIENDA VALUES ('COOPEL')
 
@@ -40,6 +38,8 @@ go
 
 select*from estudiantes
 select*from maestro
+select*from TIENDA
+select*from Usuarios
 
 insert into maestro values(1
 ,'fito'
@@ -52,10 +52,6 @@ insert into estudiantes values(5,'angel','devian',1,'')
 insert into estudiantes values(6,'angel','karsen',1,'')
 insert into estudiantes values(7,'angel','larsen',1,'')
 insert into estudiantes values(8,'angel','carsen',1,'')
-
-update ESTUDIANTES
-set id_m = ' '
-where ID_E = 8
 
 insert into estudiantes values
 (2,'carmen','contreras',1,''),
