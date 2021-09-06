@@ -449,6 +449,11 @@ GO
 -- (supongamos que está en pesetas) ($1 = 150 ptas.) de aquellos maillots
 -- cuyo premio supere los 100 dólares. SELECT TIPO, PREMIO/150 AS DOLARESFROM MAILLOTWHERE PREMIO/150 >= 100
 GO
+-- Obtener pares de números de etapas y nombres de
+-- puertos ganados por el mismo ciclista. SELECT E.N_ETAPA, NOMBRE_P
+FROM PUERTO P, ETAPA E
+WHERE E.DORSAL = P.DORSAL
+GO
 -- Obtener el nombre de los ciclistas compañeros de equipo
 -- de ‘Miguel Induráin’ que sean más jóvenes que él. 
 SELECT C1.NOMBRE_C,C1.EDAD, C2.NOMBRE_C, C2.EDAD
@@ -472,3 +477,32 @@ FROM CICLISTA C, ETAPA E
 WHERE C.DORSAL = E.DORSAL
 AND E.KM > 150
 GO
+-- Obtener el nombre de los ciclistas compañeros de equipo de
+-- ‘Miguel Induráin’ que sean más jóvenes que él. (Es el mismo enunciado
+-- de antes) 
+SELECT C1.NOMBRE_C
+FROM CICLISTA C1
+WHERE C1.NOM_EQ
+IN 
+(SELECT C2.NOM_EQ
+FROM CICLISTA C2
+WHERE C2.NOMBRE_C ='Miguel Induroin')
+AND C1.EDAD < 
+(SELECT C2.EDAD 
+FROM CICLISTA C2
+WHERE C2.NOMBRE_C='Miguel Induroin')
+GO
+-- Obtener los nombres de los ciclistas pertenecientes
+-- al equipo dirigido por ‘Álvaro Pino’.
+SELECT NOMBRE_C
+FROM CICLISTA C1
+WHERE C1.NOM_EQ
+IN 
+(
+SELECT E1.NOM_EQ 
+FROM EQUIPO E1
+WHERE E1.DIRECTOR = 'Alvaro Pino'
+)
+GO
+-- Obtener los nombres de los puertos cuya altura es
+-- mayor que la media de altura de los puertos de 2ª categoría
