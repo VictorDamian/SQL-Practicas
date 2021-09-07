@@ -506,3 +506,88 @@ WHERE E1.DIRECTOR = 'Alvaro Pino'
 GO
 -- Obtener los nombres de los puertos cuya altura es
 -- mayor que la media de altura de los puertos de 2ª categoría
+SELECT NOMBRE_P
+FROM PUERTO
+WHERE ALTURA >
+(
+SELECT AVG(ALTURA)
+FROM PUERTO
+WHERE CATEGORIA='2'
+)
+GO
+-- Obtener el nº de las etapas ganadas por ciclistas con
+-- edad superior a los 30 años.
+SELECT E.N_ETAPA, E.DORSAL
+FROM ETAPA E
+WHERE E.DORSAL 
+IN
+(
+SELECT C.DORSAL
+FROM CICLISTA C
+WHERE C.DORSAL > 30
+)
+GO
+-- Obtener el número de las etapas ganadas por
+-- ciclistas que pertenezcan a equipos cuyo director 
+-- tenga un nombre que empiece por ‘A’. 
+SELECT E.N_ETAPA
+FROM ETAPA E
+WHERE E.DORSAL
+IN
+(
+SELECT C.DORSAL
+FROM CICLISTA C
+WHERE C.NOM_EQ
+IN
+(SELECT EQ.NOM_EQ
+FROM EQUIPO EQ
+WHERE EQ.DIRECTOR LIKE 'A%')
+)
+GO
+-- Obtener el nombre de los puertos y de los ciclistas que
+-- los hayan ganado que tengan la mayor pendiente. 
+SELECT P.NOMBRE_P, C.NOMBRE_C
+FROM PUERTO P, CICLISTA C
+WHERE C.DORSAL = P.DORSAL
+AND P.PENDIENTE >= ALL 
+(
+SELECT P1.PENDIENTE
+FROM PUERTO P1
+)
+GO
+--Obtener el nombre de los puertos y de los ciclistas que
+--los hayan ganado, cumpliendo que el puerto no sea el que tenga
+--la menor pendiente.
+SELECT P.NOMBRE_P, C.NOMBRE_C 
+FROM PUERTO P, CICLISTA C
+WHERE P.DORSAL = C.DORSAL AND
+P.pendiente > ANY (SELECT P1.pendiente FROM Puerto)
+GO
+--Obtener el nombre de aquellos ciclistas que han 
+--llevado un maillot de un premio menor de 2000000. 
+SELECT*FROM MAILLOT
+SELECT*FROM LLEVAR
+
+SELECT C.NOMBRE_C, L.CODIGO
+FROM CICLISTA C, LLEVAR L
+WHERE C.DORSAL = L.DORSAL
+AND
+EXISTS
+(
+SELECT *
+FROM MAILLOT M
+WHERE M.PREMIO < 8000000
+AND  M.CODIGO = L.CODIGO
+)
+GO
+
+SELECT C.NOMBRE_C 
+FROM Ciclista C, Llevar L
+WHERE C.dorsal = L.dorsal 
+AND L.codigo 
+IN 
+(
+SELECT M.codigo
+FROM Maillot M
+WHERE M.premio < 8000000 
+)
